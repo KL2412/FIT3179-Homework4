@@ -1,0 +1,118 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": {
+      "text": "Olympic Success: Medals Won per Million People",
+      "subtitle": "Highlighting countries with the highest medals per capita in the 2024 Olympics",
+      "fontSize": 16,
+      "anchor": "middle"
+    },
+    "width": 1200,
+    "height": 600,
+    "data": {
+      "url": "Dataset/data.csv"
+    },
+    "params": [
+      {
+        "name": "ContinentFilter",
+        "value": "All",
+        "bind": {
+          "input": "select",
+          "options": ["All", "Africa", "Asia", "Europe", "North America", "South America", "Oceania"],
+          "labels": ["All", "Africa", "Asia", "Europe", "North America", "South America", "Oceania"],
+          "name": "Select Continent: "
+        }
+      },
+      {
+        "name": "minMedals",
+        "value": 0,
+        "bind": {
+          "input": "range",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "name": "Minimum Total Medals: "
+        }
+      }
+    ],
+    "transform": [
+      {
+        "filter": "(datum['Total'] > 0) && (ContinentFilter == 'All' || datum.continent == ContinentFilter) && (datum['Total'] >= minMedals)"
+      }
+    ],
+    "layer": [
+      {
+        "mark": "circle",
+        "params": [
+          {
+            "name": "legendSelection",
+            "select": {"type": "point", "fields": ["country_long"]},
+            "bind": "legend"
+          }
+        ],
+        "encoding": {
+          "x": {
+            "field": "total_population",
+            "type": "quantitative",
+            "title": "Total Population",
+            "axis": {
+              "grid": false,
+              "labelAngle": 0
+            }
+          },
+          "y": {
+            "field": "Total",
+            "type": "quantitative",
+            "title": "Total Medals"
+          },
+          "size": {
+            "field": "Total",
+            "type": "quantitative",
+            "title": "Total Medals",
+            "legend": {
+              "title": "Total Medals"
+            }
+          },
+          "color": {
+            "field": "country_long",
+            "type": "nominal",
+            "title": "Country"
+          },
+          "opacity": {
+            "condition": {"param": "legendSelection", "value": 1},
+            "value": 0.2
+          },
+          "tooltip": [
+            {"field": "country_long", "title": "Country"},
+            {"field": "Gold Medal", "title": "Gold Medals"},
+            {"field": "Silver Medal", "title": "Silver Medals"},
+            {"field": "Bronze Medal", "title": "Bronze Medals"},
+            {"field": "Total", "title": "Total Medals"},
+            {"field": "total_population", "title": "Population"}
+          ]
+        }
+      },
+      {
+        "mark": {
+          "type": "text",
+          "align": "left",
+          "baseline": "middle",
+          "dx": 5,
+          "fontSize": 11,
+          "fontStyle": "italic"
+        },
+        "encoding": {
+          "x": {"field": "total_population", "type": "quantitative"},
+          "y": {"field": "Total", "type": "quantitative"},
+          "text": {"field": "country_long"},
+          "opacity": {
+            "condition": {
+              "test": "datum['country_long'] == 'United States of America' || datum['country_long'] == 'China' || datum['country_long'] == 'India' || datum['country_long'] == 'United Kingdom of Great Britain and Northern Ireland' || datum['country_long'] == 'Australia' || datum['country_long'] == 'Japan' || datum['country_long'] == 'Kenya' || datum['country_long'] == 'Brazil'",
+              "value": 1
+            },
+            "value": 0
+          }
+        }
+      }
+    ]
+  }
+  
