@@ -9,7 +9,7 @@
 # # Drop duplicate rows, if any
 # combined_data = combined_data.drop_duplicates()
 
-# # Save the combined data for use in the Vega-Lite visualization
+# # Save the combined data for use in the Vega-Lite visualizatio
 # combined_data.to_csv('data2.csv', index=False)
 
 # import pandas as pd
